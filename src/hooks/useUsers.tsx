@@ -4,47 +4,26 @@ import type { User } from '../services/userService';
 
 export default function useUsers() {
     const [users, setUsers] = useState<User[]>([]);
-    const [loading, setLoading] = useState(false);
 
     const fetchUsers = useCallback(async () => {
-        setLoading(true);
-        try {
-            const data = await getUsers();
-            setUsers(data);
-        } finally {
-            setLoading(false);
-        }
+        const data = await getUsers();
+        setUsers(data);
     }, []);
 
     const addUser = async (user: User) => {
-        setLoading(true);
-        try {
-            await createUser(user);
-            await fetchUsers();
-        } finally {
-            setLoading(false);
-        }
+        await createUser(user);
+        await fetchUsers();
     };
 
     const editUser = async (user: User) => {
-        setLoading(true);
-        try {
-            await updateUser(user);
-            await fetchUsers();
-        } finally {
-            setLoading(false);
-        }
+        await updateUser(user);
+        await fetchUsers();
     };
 
     const removeUser = async (user_id: number) => {
-        setLoading(true);
-        try {
-            await deleteUser(user_id);
-            await fetchUsers();
-        } finally {
-            setLoading(false);
-        }
+        await deleteUser(user_id);
+        await fetchUsers();
     };
 
-    return { users, loading, fetchUsers, addUser, editUser, removeUser };
+    return { users, fetchUsers, addUser, editUser, removeUser };
 }

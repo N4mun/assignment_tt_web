@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Box, Button } from '@mui/material';
+import { Pagination, Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Box, Button } from '@mui/material';
 import type { User } from '../services/userService';
 import OperationButton from "../components/OperationButton";
 import UserFormModal from "../components/๊UserFormModal";
@@ -115,6 +115,7 @@ const Home = () => {
 
     // Pagination data
     const displayRows = users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    const pageCount = Math.ceil(users.length / rowsPerPage);
 
     return (
         <Container sx={{ mt: 5, mb: 5 }}>
@@ -206,21 +207,52 @@ const Home = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={users.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    showFirstButton
-                    showLastButton
-                    sx={{
-                        '.MuiTablePagination-toolbar': { background: '#f5f5f5', borderRadius: 2 },
-                        '.MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows': { fontWeight: 500 }
-                    }}
-                />
+                <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    my={2}
+                    gap={2}
+                >
+
+                    <Typography variant="body2" sx={{ minWidth: 100, ml: 3 }}>
+                        {users.length === 0
+                            ? "0–0 of 0"
+                            : `${page * rowsPerPage + 1}–${Math.min((page + 1) * rowsPerPage, users.length)} of ${users.length}`}
+                    </Typography>
+
+
+                    <Box flex={1} display="flex" justifyContent="center">
+                        <Pagination
+                            count={pageCount}
+                            page={page + 1}
+                            onChange={(_, value) => setPage(value - 1)}
+                            color="primary"
+                            showFirstButton
+                            showLastButton
+                        />
+                    </Box>
+
+
+                    <Box>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            component="div"
+                            count={users.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            ActionsComponent={() => null}
+                            labelRowsPerPage="Rows per page:"
+                            sx={{
+                                '.MuiTablePagination-toolbar': { p: 0, minHeight: 0 },
+                                '.MuiTablePagination-spacer': { display: 'none' },
+                                '.MuiTablePagination-displayedRows': { display: 'none' }
+                            }}
+                        />
+                    </Box>
+                </Box>
             </Paper>
 
 
